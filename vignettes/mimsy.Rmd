@@ -1,0 +1,158 @@
+---
+title: "Get started"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(mimsy)
+library(knitr)
+```
+
+## 1. Introduction  
+
+mimsy is a package designed to calculate dissolved gas concentrations of oxygen, nitrogen, and argon from Membrane Inlet Mass Spectrometer (MIMS) signal data. For more information on the gas solubility equations used in this package, please see the References section. No R expertise is required to use mimsy, and this guide is designed for novice R users.  
+
+If you find bugs in this software, or you would like to suggest new features, please let us know on the [mimsy GitHub page](https://github.com/michelleckelly/mimsy/issues).  
+
+## 2. Installation  
+
+mimsy is not yet released on CRAN, the official repository for R packages. To download mimsy from GitHub, use the devtools package:  
+
+```{r install.packages, eval = FALSE}
+# Install the devtools package
+install.packages("devtools")
+
+# Load devtools
+library(devtools)
+
+# Download mimsy from github using devtools
+install_github("michelleckelly/mimsy", dependencies = "Depends")
+```
+
+Afterwards, you can load mimsy like any other package:
+
+```{r library, eval = FALSE}
+# Load mimsy
+library(mimsy)
+```
+
+## 3. Running mimsy  
+
+The general structure for running mimsy is:  
+
+1. Format your CSV file
+2. Load CSV file into R using `read.csv()`
+3. Run the `mimsy()` function
+4. Explore the results
+5. Save the results to an Excel file using `mimsy.save()` or an RData file using `save()`
+
+### 3.1. Format your CSV file  
+
+You'll need to add some special columns to your data file before loading it into R. The easiest way to do this is to use a spreadsheet editor like Excel. We recommend saving a seperate copy of your raw data file for mimsy (add "_mimsy" to the file name) to prevent any accidents.  
+
+![Figure 1. An example of a correctly formatted raw data file.](excel.png)  
+
+**CSV file format:**  
+
+* You can save as CSV within Excel from the *File > Save as* menu, choosing the *CSV (Comma delimited) (.csv)* option.
+
+**Columns:**  
+
+* Type  
+    + If the row contains data for a standard, enter "Standard". If the row contains data for a sample, enter "Sample".
+    + The name of this column must be "Type" (check for correct capitalization)  
+* Group  
+    + Each block of standards and the samples run directly afterwards belong to a group. You'll enter "1" for the first block of standards and the first block of samples. You'll enter "2" for the second block of standards and the second block of samples, etc.  
+    + The name of this column must be "Group" (check for correct capitalization)  
+* CollectionTemp  
+    + The temperature of samples or standards at the time of field collection, in degrees C
+    + The name of this column must be "CollectionTemp" (check for correct capitalization)  
+* RunDate  
+    + The date (M/D/YYYY) that samples were run on the MIMS.  
+    + The name of this column must be "RunDate" (check for correct capitalization)  
+
+* Label or other sample identifier columns  
+    +  mimsy will preserve all labelling columns in the final output, so you should add whatever labels or notes columns you like
+
+* Index, Time, 28, 32, 40, 99, N2/Ar, O2/Ar columns  
+    + This is the default output from the MIMS  
+
+### 3.2. Load your CSV file into R using `read.csv()`  
+
+```{r load.csv, eval = TRUE}
+# Load data into R
+data <- read.csv(file = "data.csv", header = TRUE, stringsAsFactors = FALSE)
+
+# Check out the structure
+str(data, vec.len = 2)
+```
+
+### 3.3. Run the `mimsy()` function  
+
+You must specify the barometric pressure (as `baromet.press`) and its units in the function argument. Units must be one of `"atm"`, `"hPa"`, `"psi"`, `"bar"`, or `"Torr"`. All other inputs, such as background corrections or standard salinity, are optional. Check out `?mimsy` for more information.  
+
+```{r run, eval = TRUE, warning=FALSE}
+# Run the function
+results <- mimsy(data, baromet.press = 977.2, units = "hPa")
+```
+
+### 3.4. Explore the results  
+
+You'll see that `mimsy()` returns a list containing five seperate dataframes (`results`, `solubility.Concentrations`, `calibration.Factors`, `calibration.DriftCorrection`, and `results.full`). Check out ?mimsy() for more specific information on those outputs and how they were calculated.  
+
+```{r results}
+# Check out the structure of the output
+summary(results)
+
+# See the summarized results dataframe
+str(results$results, give.attr = FALSE)
+```
+
+### 3.5. Save the results  
+
+```{r save, eval = FALSE}
+# Save output to an Excel workbook
+mimsy.save(results, file = "results.xlsx")
+
+# Save output to an RData file
+save(results, file = "results.RData")
+```
+
+We don't reccomend saving results dataframes to CSV files (although you can), as you'll need multiple CSV's to preserve all of the outputs, and that gets kind of messy. A good alternative is to save both an Excel workbook copy and an RData copy, that way all of your output is preserved every time.
+
+You can load RData files back into R using `load("results.RData")`. Check out `?load()` for more info.
+
+## 4. Putting it all together
+
+```{r fullScript, eval=FALSE}
+# Install the devtools package
+install.packages("devtools")
+# Load devtools
+library(devtools)
+# Download mimsy from Github using devtools
+install_github("michelleckelly/mimsy", dependencies = "Depends")
+
+# Load mimsy
+library(mimsy)
+
+# Load data into R
+data <- read.csv(file = "data.csv", header = TRUE, stringsAsFactors = FALSE)
+
+# Run the mimsy function
+results <- mimsy(data, baromet.press = 977.2, units = "hPa")
+
+# Save the results
+mimsy.save(results, file = "results.xlsx") # To Excel file
+save(results, file = "results.RData") # To RData file
+
+# Done! :)
+```
