@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -6,52 +6,41 @@ knitr::opts_chunk$set(
 library(mimsy)
 library(knitr)
 
-## ----install.packages, eval = FALSE--------------------------------------
-#  # Install the devtools package
-#  install.packages("devtools")
+## ----install.packages, eval = FALSE-------------------------------------------
+#  # Install the package
+#  install.packages("mimsy")
 #  
-#  # Load devtools
-#  library(devtools)
-#  
-#  # Download mimsy from github using devtools
-#  install_github("michelleckelly/mimsy", dependencies = "Depends")
-
-## ----library, eval = FALSE-----------------------------------------------
-#  # Load mimsy
+#  # Load the package
 #  library(mimsy)
 
-## ----load.csv, eval = TRUE-----------------------------------------------
+## ----load.csv, eval = TRUE----------------------------------------------------
 # Load data into R
 data <- read.csv(file = "data.csv", header = TRUE, stringsAsFactors = FALSE)
 
 # Check out the structure
 str(data, vec.len = 2)
 
-## ----run, eval = TRUE, warning=FALSE-------------------------------------
+## ----run, eval = TRUE, warning=FALSE------------------------------------------
 # Run the function
 results <- mimsy(data, baromet.press = 977.2, units = "hPa")
 
-## ----results-------------------------------------------------------------
+## ----results------------------------------------------------------------------
 # Check out the structure of the output
 summary(results)
 
 # See the summarized results dataframe
 str(results$results, give.attr = FALSE)
 
-## ----save, eval = FALSE--------------------------------------------------
+## ----save, eval = FALSE-------------------------------------------------------
 #  # Save output to an Excel workbook
 #  mimsy.save(results, file = "results.xlsx")
 #  
 #  # Save output to an RData file
 #  save(results, file = "results.RData")
 
-## ----fullScript, eval=FALSE----------------------------------------------
-#  # Install the devtools package
-#  install.packages("devtools")
-#  # Load devtools
-#  library(devtools)
-#  # Download mimsy from Github using devtools
-#  install_github("michelleckelly/mimsy", dependencies = "Depends")
+## ----fullScript, eval=FALSE---------------------------------------------------
+#  # Install mimsy
+#  install.packages("mimsy")
 #  
 #  # Load mimsy
 #  library(mimsy)

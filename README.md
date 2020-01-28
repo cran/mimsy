@@ -5,7 +5,7 @@
 
 "Calculate MIMS dissolved gas concentrations without getting a headache."  
 
-`mimsy` is a data analysis package that transforms raw MIMS (Membrane Inlet Mass Spectrometer) signal data into dissolved gas concentration readings using standard solubility equations. `mimsy` is designed to be simple and accessible for non-R users.  
+`mimsy` is a data analysis package that transforms raw MIMS (Membrane Inlet Mass Spectrometer) signal data into dissolved gas concentration readings (mg, micromole) of N2, O2, and Ar based on gas solubility at temperature, pressure, and salinity. Supports dual-temperature standard calibration for dual-bath MIMS setups. `mimsy` is designed to be simple and accessible for non-R users.  
 
 Click on the **Get started** tab above to read through the detailed how-to guide. 
 
@@ -27,9 +27,8 @@ save(results, file = "results.RData") # To RData file
 ### Installation instructions 
 
 ```R
-# Pull package from github using devtools
-library(devtools)
-install_github("michelleckelly/mimsy", dependencies = "Depends")
+# Download package
+install.packages("mimsy")
 
 # Load package into your R environment
 library(mimsy)
@@ -43,7 +42,7 @@ citation("mimsy")
 ```
 
 ### Disclaimer
-`mimsy` holds no official endorsement from the Bay Instruments company. This software is preliminary and subject to revision. By the use of this software, the user assumes their own responsibility for ensuring the accuracy of the program. 
+`mimsy` holds no endorsement from the Bay Instruments company. This software is preliminary and subject to revision. By the use of this software, the user assumes their own responsibility for ensuring the accuracy of the program. 
 
 ### References
 Garcia, H., and L. Gordon (1992), _Oxygen solubility in seawater: Better fitting
