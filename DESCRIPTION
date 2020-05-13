@@ -2,12 +2,13 @@ Package: mimsy
 Type: Package
 Title: Calculate MIMS Dissolved Gas Concentrations Without Getting a
         Headache
-Version: 0.4.3
-Date: 2020-01-28
+Version: 0.6.0
+Date: 2020-05-12
 Authors@R: c(
-	person("Michelle C.", "Kelly", , "michellecatherinekelly@gmail.com", role = c("aut", "cre"))
+	person("Michelle Catherine", "Kelly", , "mckelly1@mtu.edu", role = c("aut", "cre")),
+	person("Kevin", "Nevorski", , role = c("ctb")),
+	person("Amy M.", "Marcarelli", , role = c("ctb"))
 	)
-Author: Michelle C. Kelly [aut, cre]
 Description: Calculate dissolved gas concentrations from raw MIMS 
 	(Membrane Inlet Mass Spectrometer) signal data. Use mimsy() on 
 	a formatted CSV file to return dissolved gas concentrations 
@@ -27,10 +28,13 @@ LazyData: true
 RoxygenNote: 7.0.2
 Encoding: UTF-8
 Imports: dplyr, magrittr, lubridate, openxlsx, utils
-Suggests: knitr, rmarkdown
+Suggests: knitr, rmarkdown, kableExtra, xfun
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-01-28 18:15:16 UTC; michelle
-Maintainer: Michelle C. Kelly <michellecatherinekelly@gmail.com>
+Packaged: 2020-05-12 22:34:51 UTC; michelle
+Author: Michelle Catherine Kelly [aut, cre],
+  Kevin Nevorski [ctb],
+  Amy M. Marcarelli [ctb]
+Maintainer: Michelle Catherine Kelly <mckelly1@mtu.edu>
 Repository: CRAN
-Date/Publication: 2020-01-28 18:30:02 UTC
+Date/Publication: 2020-05-13 23:40:05 UTC
