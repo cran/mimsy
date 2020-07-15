@@ -470,16 +470,15 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
           (calslope$calslope_O2Ar[groupNo] *
              as.numeric(difftime(group.block$Time[i],
                                  group.block$Time[1], units = "days")))
+
+        # Add group block data to datalist
+        datalist[[groupNo]] <- group.block
       }
-
-      # create list of sample blocks
-      datalist[[groupNo]] <- group.block
-
-      # convert datalist from list to dataframe this dataframe
-      # will become the 'detailed' data output to the user
-      data <- dplyr::bind_rows(datalist)
     }
-  } #close single temp
+    # convert datalist from list to dataframe this dataframe
+    # will become the 'detailed' data output to the user
+    data <- dplyr::bind_rows(datalist)
+  }  #close single temp
 
   if (nrow(unique(data[StdIndex, "CollectionTemp"])) == 2) {
     ######### Two-point calibration #########
@@ -558,9 +557,6 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
         mean(cal.block$O2.Ar[cal.block$CollectionTemp == std.temps[2]])
 
     }
-
-
-
 
     # 5. Calculate slope and intercepts of calibration curve -----------------
     # Use a linear model from the mean low and high temperature calibration
@@ -830,10 +826,9 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
       datalist[[groupNo]] <- group.block
     }
 
-
-      # convert datalist from list to dataframe this dataframe will become the
-      # 'detailed' data output to the user
-      data <- dplyr::bind_rows(datalist)
+    # convert datalist from list to dataframe this dataframe will become the
+    # 'detailed' data output to the user
+    data <- dplyr::bind_rows(datalist)
 
   # 8. Calculate drift and temperature corrected calibration factors -------
 
