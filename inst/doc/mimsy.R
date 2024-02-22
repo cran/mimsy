@@ -50,7 +50,7 @@ results <- mimsy(data, baromet.press = 977.2, units = "hPa")
 #  # Check out the summarized results
 #  results$results
 
-## ---- eval = TRUE, echo = FALSE-----------------------------------------------
+## ----eval = TRUE, echo = FALSE------------------------------------------------
 # Check out the summarized results
 results$results %>%
   kable() %>%
@@ -61,7 +61,7 @@ results$results %>%
 #  # Check out the solubility concentrations
 #  results$solubility.Concentrations
 
-## ---- eval = TRUE, echo = FALSE-----------------------------------------------
+## ----eval = TRUE, echo = FALSE------------------------------------------------
 # Check out the solubility concentrations
 results$solubility.Concentrations %>%
   kable() %>%

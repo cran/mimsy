@@ -1,7 +1,6 @@
 # mimsy <img src="man/figures/logo.png" align = "right" width = "200" />
 
-[![Travis CI Build Status](https://travis-ci.com/michelleckelly/mimsy.svg?branch=master)](https://travis-ci.com/michelleckelly/mimsy)
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Travis CI Build Status](https://app.travis-ci.com/michelleckelly/mimsy.svg?branch=master)](https://app.travis-ci.com/michelleckelly/mimsy)
 
 "Calculate MIMS dissolved gas concentrations without getting a headache."  
 

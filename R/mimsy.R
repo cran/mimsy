@@ -139,9 +139,7 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
                                 row.names = paste(std.temps, "deg C"))
 
   # O2 saturation calculation ------------------------------------------------
-  for (i in seq_along(std.temps)) {
-
-    t <- std.temps[i]
+  o2Sat <- function(t){
 
     # Vapor pressure correction use the Antoine equation to calculate vapor
     # pressure of water [bar] See NIST Chemistry WebBook for general tables,
@@ -176,17 +174,14 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
     lnO2.sat <- A0 + A1 * TS + A2 * TS^2 + A3 * TS^2 + A3 * TS^3 + A4 *
       TS^4 + A5 * TS^5 + S * (B0 + B1 * TS + B2 * TS^2 + B3 * TS^3) + C0 * S^2
     O2.sat <- exp(lnO2.sat)
-
     # Correct O2 saturation with pressure correction, solubility.conc units
     # [umol/kg]
-    solubility.conc$O2.conc_uMol.kg[i] <- O2.sat * press.corr
+    result <- O2.sat * press.corr
+    return(result)
   }
 
   # N2 saturation calculation ------------------------------------------------
-  for (i in seq_along(std.temps)) {
-
-    t <- std.temps[i]
-
+  n2Sat <- function(t){
     # Vapor pressure correction use the Antoine equation to calculate vapor
     # pressure of water [bar] See NIST Chemistry WebBook for general tables,
     # these parameters valid for temperatures between -18 to 100C (Stull 1947)
@@ -219,10 +214,10 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
     lnN2.sat <-
       A0 + A1 * TS + A2 * TS^2 + A3 * TS^3 + S * (B0 + B1 * TS + B2 * TS^2)
     N2.sat <- exp(lnN2.sat)
-
     # Correct saturation with pressure correction, solubility.conc units are
     # [umol/kg]
-    solubility.conc$N2.conc_uMol.kg[i] <- N2.sat * press.corr
+    result <- N2.sat * press.corr
+    return(result)
   }
 
   # Ar saturation calculation ------------------------------------------------
@@ -266,18 +261,22 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
     return(result)
   }
 
-  # Run function for standards
+  # Run functions for standards
   for (i in seq_along(std.temps)) {
     t <- std.temps[i]
-    # Run function
+    # Run functions
+    solubility.conc$N2.conc_uMol.kg[i] <- n2Sat(t)
+    solubility.conc$O2.conc_uMol.kg[i] <- o2Sat(t)
     solubility.conc$Ar.conc_uMol.kg[i] <- arSat(t)
   }
 
   # Group data by Type (`Standard` or `Sample`) and Group (numeric, 1:n)
   data <- dplyr::group_by(data, data$Type, data$Group)
 
-  # Calculate Ar saturation at temperature and pressure for all samples
+  # Calculate N2, O2, and Ar saturation at temperature and pressure for all samples
   data$arSat.conc_uMol.kg <- arSat(data$CollectionTemp)
+  data$n2Sat.conc_uMol.kg <- n2Sat(data$CollectionTemp)
+  data$o2Sat.conc_uMol.kg <- o2Sat(data$CollectionTemp)
 
   ######### Single-point calibration #########
   if (nrow(unique(data[StdIndex, "CollectionTemp"])) == 1) {
@@ -863,29 +862,19 @@ mimsy <- function(data, baromet.press, units, bg.correct = FALSE,
   # 9. Calculate final concentrations -------------------------------------
 
   # Calculate concentrations by multiplying signal by interpolated calibration factors
-  data$Ar_uMol <- data$X40 * data$INTERPOLATED.calfactor_28
+  data$Ar_uMolL <- data$X40 * data$INTERPOLATED.calfactor_28
   data$N2Ar <- data$N2.Ar * data$INTERPOLATED.calfactor_N2Ar
   data$O2Ar <- data$O2.Ar * data$INTERPOLATED.calfactor_O2Ar
 
   # Transform N2Ar and O2Ar ratios into concentrations of N2 or O2, using
   # Ar saturation concentration at temperature
-  data$N2_uMol <- data$N2Ar * data$arSat.conc_uMol.kg
-  data$O2_uMol <- data$O2Ar * data$arSat.conc_uMol.kg
-
-  # Apply bubble correction for oxygen
-  # = [O2] + [O2:Ar ratio] * (Ar at saturation - [Ar])
-  # Notes on bubble correction: 1) This correction is most appropriate for O2
-  # samples as O2 and Ar have similar soluability and diffusion rates
-  # 2) This bubble correction assumes any argon below saturation means that
-  # N2 and O2 were lost due to bubbling in in-field sample incubations
-  data$O2.BubbleCorrected_uMol <- data$O2_uMol + data$O2Ar *
-    (data$arSat.conc_uMol.kg - data$Ar_uMol)
+  data$N2_uMolL <- data$N2Ar * data$arSat.conc_uMol.kg
+  data$O2_uMolL <- data$O2Ar * data$arSat.conc_uMol.kg
 
   # Unit conversion: Convert from microM to mg
-  data$N2_mg <- data$N2_uMol * 10^(-6) * 28 * 10^3
-  data$O2_mg <- data$O2_uMol * 10^(-6) * 32 * 10^3
-  data$O2.BubbleCorrected_mg <- data$O2.BubbleCorrected_uMol * 10^(-6) * 32 * 10^3
-  data$Ar_mg <- data$Ar_uMol * 10^(-6) * 40 * 10^3
+  data$N2_mgL <- data$N2_uMolL * 10^(-6) * 28 * 10^3
+  data$O2_mgL <- data$O2_uMolL * 10^(-6) * 32 * 10^3
+  data$Ar_mgL <- data$Ar_uMolL * 10^(-6) * 40 * 10^3
 
   # 10. Output results to user -------------------------------------------
 
