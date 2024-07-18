@@ -2,8 +2,8 @@ Package: mimsy
 Type: Package
 Title: Calculate MIMS Dissolved Gas Concentrations Without Getting a
         Headache
-Version: 0.6.4
-Date: 2024-02-21
+Version: 0.6.5
+Date: 2024-07-18
 Authors@R: c(
 	person("Michelle Catherine", "Kelly", , "mckelly1@mtu.edu", role = c("aut", "cre")),
 	person("Kevin", "Nevorski", , role = c("ctb")),
@@ -28,10 +28,10 @@ Imports: dplyr, magrittr, lubridate, openxlsx, utils
 Suggests: knitr, rmarkdown, kableExtra, xfun
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2024-02-22 00:35:06 UTC; michelle
+Packaged: 2024-07-18 22:05:38 UTC; michelle
 Author: Michelle Catherine Kelly [aut, cre],
   Kevin Nevorski [ctb],
   Amy M. Marcarelli [ctb]
 Maintainer: Michelle Catherine Kelly <mckelly1@mtu.edu>
 Repository: CRAN
-Date/Publication: 2024-02-22 08:00:02 UTC
+Date/Publication: 2024-07-18 22:20:02 UTC
